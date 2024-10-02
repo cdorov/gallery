@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 import "@uploadthing/react/styles.css";
 
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal
-}: Readonly<{ children: React.ReactNode, modal: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <ClerkProvider>
-    <html lang="en" className={`${GeistSans.variable} flex flex-col gap-4`}>
-    <NextSSRPlugin
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <NextSSRPlugin
           /**
            * The `extractRouterConfig` will extract **only** the route configs
            * from the router to prevent additional information from being
@@ -32,13 +32,15 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-      <body>
-        <TopNav />
-        {children}
-        {modal}
-        <div id="modal-root"></div>
+        <body>
+          <div className="grid-rows-[auto, 1fr] grid h-screen">
+            <TopNav />
+            <main className="overflow-y-scroll">{children}</main>
+          </div>
+          {modal}
+          <div id="modal-root"></div>
         </body>
-    </html>
+      </html>
     </ClerkProvider>
   );
 }
