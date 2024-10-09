@@ -9,6 +9,7 @@ import TopNav from "src/app/_components/topnav";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "node_modules/uploadthing/server/index.cjs";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -39,6 +40,7 @@ export default function RootLayout({
           </div>
           {modal}
           <div id="modal-root"></div>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
