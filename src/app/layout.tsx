@@ -22,7 +22,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${GeistSans.variable}`}>
+      <html lang="en" className={`${GeistSans.variable} dark`}>
         <NextSSRPlugin
           /**
            * The `extractRouterConfig` will extract **only** the route configs
