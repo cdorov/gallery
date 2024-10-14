@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { db } from "~/server/db";
@@ -13,13 +13,20 @@ export const ourFileRouter = {
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       // This code runs on your server before upload
-      console.log('before auth');
+      console.log("before auth");
       const user = auth();
 
-      console.log('after auth');
+      console.log("after auth");
 
       // If you throw, the user will not be able to upload
-      if (!user.userId) throw new UploadThingError({message: "Unauthorized"});
+      if (!user.userId) throw new UploadThingError({ message: "Unauthorized" });
+
+      const fullUserData = await clerkClient.users.getUser(user.userId);
+
+      if (fullUserData?.privateMetadata?.["can-upload"] !== true)
+        throw new UploadThingError({
+          message: "User Does Not Have Upload Permissions",
+        });
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: user.userId };
@@ -31,8 +38,8 @@ export const ourFileRouter = {
       await db.insert(images).values({
         name: file.name,
         url: file.url,
-        userId: metadata.userId
-      })
+        userId: metadata.userId,
+      });
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { uploadedBy: metadata.userId };
